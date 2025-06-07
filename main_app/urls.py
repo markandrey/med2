@@ -20,5 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('med_base.urls')),
+    path('', include('med_base.urls', namespace='med')),
+    # namespace не является обязательным, если оно не задано, то будет использовано значение из app_name
 ]

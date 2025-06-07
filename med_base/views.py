@@ -1,16 +1,29 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from .models import Test
+
+
+def test_list(request):
+    tests = Test.objects.all()
+    return render(request,
+                  'med_base/list.html',
+                  {'tests': tests})
+
+
+def one_test(request, id):
+    test = get_object_or_404(Test, id=id)
+
+    return render(request,
+                  'med_base/detail.html',
+                  {'test': test})
 
 
 def index(request):
     return HttpResponse('<h2>Главная</h2>')
 
 
-def about(request, name, age):
-    return HttpResponse(f'''
-        <h2>О пользователе</h2>
-        <p>Имя: {name}</p>
-        <p>Возраст: {age}</p>
-    ''')
+def about(request):
+    return HttpResponse(f'<h2>О пользователе</h2>')
 
 
 def contact(request):

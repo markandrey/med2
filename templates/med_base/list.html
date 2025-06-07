@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Медсайт - анализы{% endblock %}
+{% block content %}
+    <h1>Медсайт - анализы</h1>
+    {% for test in tests %}
+        <h2>
+            <a href="{% url 'med:one_test' test.id %}"> {{ test.name }}</a>
+        </h2>
+        <p class="date">
+            Дата анализа: {{ test.date }}
+        </p>
+        {{ test.patient }}
+    {% endfor %}
+{% endblock %}

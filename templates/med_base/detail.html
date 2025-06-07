@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ test.name }}{% endblock %}
+{% block content %}
+    <h1>{{ test.name }}</h1>
+    <p class="date">
+        Дата анализа: {{ test.date }}
+    </p>
+    {{ test.value }} норма ({{ test.upper_limit }} - {{ test.down_limit }})
+{% endblock %}

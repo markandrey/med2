@@ -1,9 +1,10 @@
 from django.urls import path
-from med_base import views
+from . import views
 
+
+app_name = 'tests_and_observs'
 
 urlpatterns = [
-    path('', views.index, name='home'),
-    path('about/', views.about, name='about'),
-    path('contact/', views.contact, name='contact'),
+    path('tests/', views.test_list, name='test_list'),
+    path('tests/<int:id>/', views.one_test, name='one_test'),
 ]
