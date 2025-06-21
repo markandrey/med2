@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -36,6 +37,10 @@ class Test(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE)  # Обратная связь: user.test_set
     name = models.ForeignKey(TestName, on_delete=models.PROTECT)   # Обратная связь: testname.test_set
 
+    def get_absolute_url(self):
+        return reverse('med:one_test',  # namespase:имя маршрута (из urls.py)
+                       args=[self.id])
+
     class Meta:
         ordering = ["name", "-date"]
         verbose_name = 'Анализ'
@@ -43,4 +48,3 @@ class Test(models.Model):
 
     def __str__(self):
         return f'Анализ {self.name}'
-    

@@ -19,7 +19,7 @@ def one_test(request, id):
 
 
 def index(request):
-    return HttpResponse('<h2>Главная</h2>')
+    return render(request, 'base.html')
 
 
 def about(request):

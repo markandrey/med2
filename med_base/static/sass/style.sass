@@ -1,0 +1,46 @@
+$bg-color: #9ec8ae
+$text-color: #1b2921
+$accent-color: #f1e210
+$contrast-color: #423a92
+$grey-color: #b7b4b4
+$navbar-color: #1360c5
+
+
+
+html, body
+    height: 100%
+
+body
+    min-width: 320px
+    font-family: 'Rubik', sans-serif
+    background-color: $bg-color
+    color: $text-color
+
+.wrapper
+    min-height: 100%
+    display: flex
+    flex-direction: column
+    &__main
+        flex: 1 1 auto
+    &__navbar
+        border-top: 3px solid $contrast-color
+        box-shadow: 0 10px 10px rgba(0, 0, 0, .2)
+        .navbar
+            background-color: $navbar-color
+        .nav-link
+            letter-spacing: .1rem
+        .dropdown-menu
+            background-color: $navbar-color
+
+.social
+    list-style: none
+    a
+        color: $text-color
+        transition: all 0.3s
+        &:hover
+            color: $accent-color
+
+.form-control
+    &::placeholder
+        color: $grey-color
+        opacity: 1
