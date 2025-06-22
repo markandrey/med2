@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+<style>
+    .transparent-table {
+        background-color: transparent !important;
+    }
+
+    .transparent-table thead th {
+        background-color: rgba(248, 249, 250, 0.7) !important; /* Полупрозрачный хедер */
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .transparent-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .transparent-table tbody tr:hover {
+        background-color: rgba(248, 249, 250, 0.4) !important;
+    }
+</style>
+
+{% block content %}
+
+<p>{{ content }}</p>
+
+
+<div class="container table-wrapper">
+    <h2 class="mb-4">Последние 20 пациентов</h2>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Поиск:</span>
+        <input type="text" class="form-control" id="searchInput" onkeyup="filterTable()">
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>ФИО</th>
+                <th>Дата рождения</th>
+                <th>Диагноз</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Пример данных -->
+            <tr>
+                <td>1</td>
+                <td>Иванов Петр Сергеевич</td>
+                <td>15.03.1985</td>
+                <td>J18.9 - Пневмония неуточненная</td>
+                <td><a href="#" class="btn btn-primary btn-sm">Открыть карту</a></td>
+            </tr>
+            <!-- Повторить для 20 записей -->
+            <tr>
+                <td>1</td>
+                <td>Иванов Петр Сергеевич</td>
+                <td>15.03.1985</td>
+                <td>J18.9 - Пневмония неуточненная</td>
+                <td><a href="#" class="btn btn-primary btn-sm">Открыть карту</a></td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Иванов Петр Сергеевич</td>
+                <td>15.03.1985</td>
+                <td>J18.9 - Пневмония неуточненная</td>
+                <td><a href="#" class="btn btn-primary btn-sm">Открыть карту</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock %}
