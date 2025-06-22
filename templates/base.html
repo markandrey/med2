@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
-    <title>{% block title %}{% endblock %}</title>
+    <title>{{ title }}</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <!-- Набор иконок -->
@@ -23,7 +23,7 @@
         <header class="wrapper__header">
             <!-- Сделано по шаблону Components-> Navbar -> 1 -->
             <div class="wrapper__navbar bg-info-subtle sticky-top">
-                <!-- Добавлено из шаблона Components-> Navbar -> Color chemes style="background-color:rgb(10, 106, 174);"-->
+                <!-- Добавлено из шаблона Components-> Navbar -> Color chemes -->
                 <nav class="navbar navbar-expand-lg"  data-bs-theme="dark">
                     <div class="container-fluid">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +32,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="{% url "med:index" %}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Раздел 1</a>
@@ -41,7 +41,7 @@
                             <a class="nav-link" href="#">Раздел 2</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Раздел 3</a>
+                            <a class="nav-link" href="{% url "med:about" %}">О сайте</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -197,26 +197,7 @@
                     {% block content %}
                     {% endblock %}
                 </div>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet excepturi mollitia vel nulla doloribus illum, eum esse hic error voluptatum facilis autem qui, dolorum repudiandae saepe distinctio? Et, maiores alias?</p>
-                <p>Minus dolorum provident, est libero eos earum adipisci non corrupti eligendi ratione fuga voluptate quidem sed voluptatum fugiat ad aspernatur! Placeat ad, maiores consectetur nihil molestias tempora quae cum tenetur!</p>
-                <p>Nulla nesciunt ea autem minima obcaecati ducimus. Molestias sequi ducimus mollitia. Minus, et. Ducimus facilis numquam, porro quaerat aspernatur sit, nihil nisi repellat inventore a voluptatum quo. Quia, facere sequi.</p>
-                <p>Tenetur officiis nobis voluptatum saepe voluptas quam beatae hic esse dolorum, maxime quia aut aperiam recusandae nemo cupiditate amet accusantium tempore suscipit quidem ducimus. Nihil quasi eum neque voluptate impedit!</p>
-                <p>Perferendis culpa assumenda nihil at ut vel possimus nobis eos neque placeat, quasi accusamus quas quaerat. Ut dicta assumenda sequi iste? Molestias est odit, consectetur quisquam dolorem enim minus perferendis.</p>
-                <p>Illum eveniet laudantium soluta nemo fuga voluptatem cum in consequuntur, labore temporibus! Minima quidem, deserunt cupiditate suscipit in quod aut inventore, rerum nesciunt molestias dignissimos similique iure voluptatibus a optio.</p>
-                <p>Tenetur corporis vitae voluptas quaerat odio. Perferendis, soluta cum repellendus tenetur, eius dignissimos exercitationem pariatur illo quis, vero suscipit officia adipisci in autem minus veniam quidem dolorum expedita facilis tempora?</p>
-                <p>Laboriosam temporibus sequi deserunt dicta hic cum necessitatibus omnis dolores vel est dolor doloremque eius, reiciendis quo facilis ipsam illo nulla minima obcaecati earum perspiciatis ratione iusto asperiores! Libero, saepe.</p>
-                <p>Magnam quia a ex nostrum expedita quo maiores magni numquam ratione rem facere mollitia aliquid inventore tempora, atque vero temporibus dicta deserunt animi commodi voluptas doloribus optio eveniet. Eaque, molestias?</p>
-                <p>Qui eligendi quisquam libero quod voluptatibus delectus eius quam voluptatum velit at, reiciendis esse. Excepturi fugit similique illo ipsam quis aperiam suscipit sapiente, vitae alias ipsa rem recusandae, totam aut.</p>
-                <p>Accusantium commodi corporis facere hic tempora ratione itaque sed quidem, accusamus, praesentium assumenda blanditiis consectetur natus iste neque magnam quo. Suscipit dicta id voluptatum ipsam adipisci laborum in quidem saepe!</p>
-                <p>Illum, dolores sit. Pariatur itaque et praesentium dolorum, officia asperiores numquam dolore? Pariatur excepturi exercitationem quo culpa nulla repellat. Placeat eveniet quae officia eos, atque quisquam optio delectus beatae dolorem.</p>
-                <p>Provident rerum, earum repellendus deleniti necessitatibus distinctio accusantium debitis eveniet culpa voluptatibus mollitia eius iure porro recusandae? Minus placeat sed soluta consectetur fuga recusandae praesentium molestiae? Dolores ipsa voluptatem itaque.</p>
-                <p>Sint blanditiis veniam tempora quis, labore, tempore ab saepe eius obcaecati ea sit? Quod veritatis ut pariatur nulla aspernatur impedit ipsam minus suscipit quo, cum, porro reiciendis, error eum blanditiis.</p>
-                <p>Recusandae, minima quidem. Iste id nobis ullam recusandae necessitatibus, odio sequi commodi impedit ipsum, doloribus vel ut! Nisi totam numquam nemo, minima, sint cumque, nesciunt quo debitis culpa distinctio tempora?</p>
-                <p>Dolorum saepe labore a odio excepturi pariatur autem explicabo dicta doloremque beatae? Dolor porro quis error voluptate doloremque commodi vitae mollitia id maxime aut sed, tempora dicta quidem quibusdam accusantium?</p>
-                <p>Inventore ducimus ipsum esse vero iure nisi, cumque voluptatum molestias unde aut doloremque expedita eveniet blanditiis! Accusantium, sequi modi saepe neque eaque voluptatem dolor, voluptatum quo dolores odio ullam sunt.</p>
-                <p>Dolorem nisi expedita numquam eligendi, odio dignissimos quibusdam, nesciunt dolor voluptas accusantium molestias doloremque libero quae voluptatum reiciendis id necessitatibus cum commodi ipsum? Adipisci dolores placeat quidem consequatur, ratione harum.</p>
-                <p>Fuga id nulla inventore iure eligendi perspiciatis magni quia, temporibus distinctio, hic ab! Iusto, maiores? Ab deleniti voluptatibus, autem corrupti at sunt earum sequi eius vel dolorum, eveniet suscipit dolor.</p>
-                <p>Sint laboriosam pariatur cum perspiciatis sit, dolorem aperiam laborum adipisci eaque aliquid atque unde, nihil inventore exercitationem neque repellendus vitae iure, itaque consequuntur minima velit porro deserunt quasi sed. Pariatur?</p>
+
             </div>
         </main>
 
