@@ -1,6 +1,17 @@
 from django.contrib import admin
-from .models import Group, Test, TestName
+from med_base.models import (
+    Examination,
+    AnalysisResult,
+    AnalysisParameter,
+    DiagnosticResult,
+    DiagnosticImage,
+    HealthIndicator,
+)
 
-admin.site.register(Group)
-admin.site.register(Test)
-admin.site.register(TestName)
+
+admin.site.register(Examination)
+admin.site.register(AnalysisResult)
+admin.site.register(AnalysisParameter)
+admin.site.register(DiagnosticResult)
+admin.site.register(DiagnosticImage)
+admin.site.register(HealthIndicator)

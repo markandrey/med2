@@ -35,13 +35,16 @@
                             <a class="nav-link active" aria-current="page" href="{% url "med:index" %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url "patients:index" %}">Пациенты</a>
+                            <a class="nav-link" href="{% url "patients:index" %}">Недавние пациенты</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Раздел 2</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url "med:about" %}">О сайте</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "admin:index" %}">Админ</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

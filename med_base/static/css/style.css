@@ -17,6 +17,9 @@ body {
 .wrapper__main {
   flex: 1 1 auto;
 }
+.wrapper__main .h_p {
+  color: #107d44;
+}
 .wrapper__navbar {
   border-top: 3px solid #423a92;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
