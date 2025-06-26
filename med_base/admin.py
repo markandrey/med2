@@ -1,17 +1,11 @@
 from django.contrib import admin
 from med_base.models import (
     Examination,
-    AnalysisResult,
-    AnalysisParameter,
-    DiagnosticResult,
-    DiagnosticImage,
-    HealthIndicator,
+    LaboratoryTest,
+    TestParameter,
 )
 
 
 admin.site.register(Examination)
-admin.site.register(AnalysisResult)
-admin.site.register(AnalysisParameter)
-admin.site.register(DiagnosticResult)
-admin.site.register(DiagnosticImage)
-admin.site.register(HealthIndicator)
+admin.site.register(LaboratoryTest)
+admin.site.register(TestParameter)

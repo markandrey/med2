@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField  # Доп. пакет для телефонов
+
 # добавить "phonenumber_field", в settings.py
 from django.contrib.auth import get_user_model
 
@@ -16,8 +17,8 @@ class Patient(models.Model):
     """
 
     class Gender(models.TextChoices):
-        MALE = 'M', 'Мужской'
-        FEMALE = 'F', 'Женский'
+        MALE = "M", "Мужской"
+        FEMALE = "F", "Женский"
 
     user = models.OneToOneField(
         User,
@@ -31,21 +32,17 @@ class Patient(models.Model):
     middle_name = models.CharField(
         verbose_name="Отчество",
         max_length=150,
-        blank=True, # Достаточно только blank (хранит пустую строку)
+        blank=True,  # Достаточно только blank (хранит пустую строку)
         help_text="Необязательное поле",
-        validators=[MaxLengthValidator(150)]
+        validators=[MaxLengthValidator(150)],
     )
 
     birth_date = models.DateField(
-        verbose_name="Дата рождения",
-        help_text="Формат: ДД.ММ.ГГГГ"
+        verbose_name="Дата рождения", help_text="Формат: ДД.ММ.ГГГГ"
     )
 
     gender = models.CharField(
-        verbose_name="Пол",
-        max_length=1,
-        choices=Gender.choices,
-        default=Gender.MALE
+        verbose_name="Пол", max_length=1, choices=Gender.choices, default=Gender.MALE
     )
 
     phone = PhoneNumberField(
@@ -62,15 +59,11 @@ class Patient(models.Model):
     )
 
     created_at = models.DateTimeField(
-        verbose_name="Дата создания",
-        auto_now_add=True,
-        editable=False
+        verbose_name="Дата создания", auto_now_add=True, editable=False
     )
 
     last_update = models.DateTimeField(
-        verbose_name="Последнее обновление",
-        auto_now=True,
-        editable=False
+        verbose_name="Последнее обновление", auto_now=True, editable=False
     )
 
     class Meta:
@@ -92,11 +85,7 @@ class Patient(models.Model):
         ]
 
     def __str__(self):
-        name_parts = [
-            self.user.get_full_name(),
-            self.middle_name if self.middle_name else None
-        ]
-        return ' '.join(filter(None, name_parts)) or f"Пациент #{self.pk}"
+        return f"{self.user.last_name} {self.user.first_name} {self.middle_name or ' '}"
 
     @property
     def full_name(self) -> str:
@@ -110,7 +99,9 @@ class Patient(models.Model):
         born = self.birth_date
         # Если день рождения ещё не наступил (сравнение True → 1), вычитаем 1
         # Если день рождения уже прошёл (сравнение False → 0), не вычитаем
-        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+        return (
+            today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+        )
 
     def save(self, *args, **kwargs):
         """Автоматическая нормализация данных перед сохранением"""
@@ -128,7 +119,7 @@ class MedicalCard(models.Model):
         primary_key=True,
         related_name="medical_card",
         verbose_name="Пациент",
-        help_text="Связанная запись пациента"
+        help_text="Связанная запись пациента",
     )
 
     diagnosis = models.TextField(
@@ -136,27 +127,25 @@ class MedicalCard(models.Model):
         blank=True,
         default="",
         validators=[MaxLengthValidator(1000)],
-        help_text="Максимум 1000 символов"
+        help_text="Максимум 1000 символов",
     )
 
     allergies = models.TextField(
         verbose_name="Аллергические реакции",
         blank=True,
         default="",
-        help_text="Перечислите аллергены и реакции"
+        help_text="Перечислите аллергены и реакции",
     )
 
     anamnesis = models.TextField(
         verbose_name="Анамнез",
         blank=True,
         default="",
-        help_text="История болезни и жизни пациента"
+        help_text="История болезни и жизни пациента",
     )
 
     last_medical_check = models.DateField(
-        verbose_name="Дата последнего осмотра",
-        blank=True,
-        null=True
+        verbose_name="Дата последнего осмотра", blank=True, null=True
     )
 
     class Meta:
@@ -176,6 +165,31 @@ class MedicalCard(models.Model):
     def last_check_years(self) -> float:
         """Возвращает сколько лет прошло с последнего осмотра"""
         if not self.last_medical_check:
-            return float('inf')
+            return float("inf")
         delta = timezone.now().date() - self.last_medical_check
         return delta.days / 365.25
+
+
+class HealthIndicator(models.Model):  # Модель медицинских показателей
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name="health_indicators"
+    )
+    indicator_type = models.CharField(
+        max_length=100,
+        verbose_name="Тип показателя",
+        help_text="Например: Артериальное давление, Вес",
+    )
+    value = models.FloatField(verbose_name="Значение")
+    date_recorded = models.DateTimeField(verbose_name="Дата измерения")
+    notes = models.TextField(blank=True, default="", verbose_name="Примечания")
+
+    class Meta:
+        verbose_name = "Медицинский показатель"
+        verbose_name_plural = "Медицинские показатели"
+        ordering = ["-date_recorded"]
+        indexes = [
+            models.Index(fields=["indicator_type"]),
+        ]
+
+    def __str__(self):
+        return f"{self.indicator_type}: {self.value} ({self.patient})"

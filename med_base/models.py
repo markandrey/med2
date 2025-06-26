@@ -1,138 +1,122 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from patients.models import Patient
 
 
 class Examination(models.Model):
+    """Модель инструментального исследования"""
+
     class ExaminationType(models.TextChoices):
-        ANALYSIS = 'analysis', 'Лабораторный анализ'
-        DIAGNOSTIC = 'diagnostic', 'Диагностическое исследование'
+        ULTRASOUND = 'ultrasound', 'УЗИ'
+        MRI = 'mri', 'МРТ'
+        CT = 'ct', 'КТ'
+        XRAY = 'xray', 'Рентген'
 
     patient = models.ForeignKey(
         Patient,
         on_delete=models.CASCADE,
-        related_name='examinations',
-        verbose_name='Пациент'
+        related_name="examinations",
+        verbose_name="Пациент",
     )
     examination_type = models.CharField(
         max_length=20,
         choices=ExaminationType.choices,
-        default=ExaminationType.ANALYSIS,
         verbose_name='Тип исследования'
     )
-    name = models.CharField(max_length=100, verbose_name='Название исследования')
-    examination_date = models.DateTimeField(verbose_name='Дата проведения')
-    notes = models.TextField(blank=True, default="", verbose_name='Примечания')
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Область исследования",
+        help_text="например: сердца, ОБП",
+    )
+    examination_date = models.DateField(
+        default=timezone.now,
+        verbose_name='Дата проведения'
+    )
+    image = models.ImageField(
+        upload_to="examinations/%Y/%m/",
+        verbose_name="Изображение",
+    )
+    notes = models.TextField(
+        blank=True, default="", verbose_name="Примечания", help_text="заметки"
+    )
 
     class Meta:
-        verbose_name = 'Исследование'
-        verbose_name_plural = 'Исследования'
-        ordering = ['-examination_date']
+        verbose_name = "Инструментальное исследование"
+        verbose_name_plural = "Инструментальные исследования"
+        ordering = ["patient", "name", "-examination_date"]
         indexes = [
-            models.Index(fields=['examination_type']),
             models.Index(fields=['examination_date']),
+            models.Index(fields=['patient', 'examination_type']),
         ]
 
     def __str__(self):
-        return f'{self.patient} {self.name} от {self.examination_date}'
+        return f"{self.patient} {self.examination_type} {self.name} от {self.examination_date}"
 
     def get_absolute_url(self):
-        return reverse('examination_detail', args=[str(self.id)])
+        return reverse('examination_detail', kwargs={'pk': self.pk})
 
 
-class AnalysisResult(models.Model):
-    examination = models.OneToOneField(
-        Examination,
+class LaboratoryTest(models.Model):
+    """Модель вида лабораторного исследования"""
+
+    class TestType(models.TextChoices):
+        BIOCHEMICAL_BLOOD = "biochemical-blood", "Биохимия крови"
+        COMPLETE_BLOOD_COUNT = "complete-blood-count", "Общий анализ крови"
+        GENERAL_URINE_ANALYSIS = "general-urine-analysis", "Общий анализ мочи"
+
+    patient = models.ForeignKey(
+        Patient,
         on_delete=models.CASCADE,
-        related_name='analysis_result',
-        verbose_name='Исследование',
-        limit_choices_to={'examination_type': 'analysis'}
+        related_name="laboratory_tests",
+        verbose_name="Пациент",
     )
-    laboratory = models.CharField(max_length=30, blank=True, verbose_name='Лаборатория')
+    test_type = models.CharField(
+        max_length=30,
+        choices=TestType.choices,
+        default=TestType.BIOCHEMICAL_BLOOD,
+        verbose_name="Вид анализа",
+    )
+    examination_date = models.DateField(verbose_name="Дата проведения")
 
     class Meta:
-        verbose_name = 'Результат анализа'
-        verbose_name_plural = 'Результаты анализов'
+        verbose_name = "Группа лабораторного анализа"
+        verbose_name_plural = "Группа лабораторных анализов"
+        ordering = ["patient", "-examination_date"]
 
     def __str__(self):
-        return f'Результаты анализа {self.examination.name}'
+        return f"{self.patient} {self.test_type} от {self.examination_date}"
 
 
-class AnalysisParameter(models.Model):
-    result = models.ForeignKey(
-        AnalysisResult,
-        on_delete=models.CASCADE,
+class TestParameter(models.Model):
+    """Модель параметра и результата лабораторного анализа"""
+
+    test = models.ForeignKey(
+        LaboratoryTest,
+        on_delete=models.PROTECT,
         related_name='parameters',
-        verbose_name='Результат анализа'
+        verbose_name='Группа анализов'
     )
-    name = models.CharField(max_length=100, verbose_name='Параметр')
-    value = models.CharField(max_length=10, verbose_name='Значение')
-    unit = models.CharField(max_length=20, blank=True, verbose_name='Единицы измерения')
-    normal_range = models.CharField(max_length=30, blank=True, verbose_name='Референсные значения')
-    is_normal = models.BooleanField(default=True, verbose_name='В норме')
+    name = models.CharField(max_length=100, verbose_name="Параметр")
+    value = models.CharField(max_length=10, verbose_name="Значение")
+    unit = models.CharField(
+        max_length=30, blank=True, verbose_name="Единицы измерения",
+    )
+    normal_range = models.CharField(
+        max_length=30, blank=True, verbose_name="Референсные значения"
+    )
+    is_normal = models.BooleanField(default=True, verbose_name="В норме")
+    notes = models.TextField(
+        blank=True,
+        default='',
+        verbose_name='Комментарии'
+    )
 
     class Meta:
-        verbose_name = 'Параметр анализа'
-        verbose_name_plural = 'Параметры анализов'
-        ordering = ['name']
+        verbose_name = "Параметр анализа, значения"
+        verbose_name_plural = "Параметры анализов, значения"
+        ordering = ["name"]
 
     def __str__(self):
         return f'{self.name}: {self.value}{" " + self.unit if self.unit else ""}'
-
-
-class DiagnosticResult(models.Model):
-    examination = models.OneToOneField(
-        Examination,
-        on_delete=models.CASCADE,
-        related_name='diagnostic_result',
-        verbose_name='Исследование',
-        limit_choices_to={'examination_type': 'diagnostic'}
-    )
-    protocol = models.TextField(blank=True, default="", verbose_name='Текстовый протокол')
-    conclusion = models.TextField(blank=True, default="", verbose_name='Заключение')
-
-    class Meta:
-        verbose_name = 'Результат диагностики'
-        verbose_name_plural = 'Результаты диагностики'
-
-    def __str__(self):
-        return f'Результат {self.examination.name}'
-
-class DiagnosticImage(models.Model):
-    # Если пациент с ID=5 загружает файл "scan_2023.jpg", файл будет сохранён в:
-    # media/diagnostics/5/scan_2023.jpg
-    def upload_to_path(instance, filename):
-        return f'diagnostics/{instance.result.examination.patient.id}/{filename}'
-
-    result = models.ForeignKey(
-        DiagnosticResult,
-        on_delete=models.CASCADE,
-        related_name='images',
-        verbose_name='Результат исследования'
-    )
-    image = models.ImageField(upload_to=upload_to_path, verbose_name='Изображение')
-
-    class Meta:
-        verbose_name = 'Изображение исследования'
-        verbose_name_plural = 'Изображения исследований'
-
-
-class HealthIndicator(models.Model):  # Модель медицинских показателей
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='health_indicators')
-    indicator_type = models.CharField(max_length=100, verbose_name='Тип показателя', help_text='Например: Артериальное давление, Вес')
-    value = models.FloatField(verbose_name='Значение')
-    date_recorded = models.DateTimeField(verbose_name='Дата измерения')
-    notes = models.TextField(blank=True, default="", verbose_name='Примечания')
-
-    class Meta:
-        verbose_name = 'Медицинский показатель'
-        verbose_name_plural = 'Медицинские показатели'
-        ordering = ['-date_recorded']
-        indexes = [
-            models.Index(fields=['indicator_type']),
-        ]
-
-    def __str__(self):
-        return f"{self.indicator_type}: {self.value} ({self.patient})"
